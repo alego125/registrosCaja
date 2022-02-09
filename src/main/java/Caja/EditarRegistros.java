@@ -33,14 +33,16 @@ public class EditarRegistros extends javax.swing.JFrame {
 
     //CReamos el modelo para luego agregar a la lista de elementos
     DefaultListModel listModel = new DefaultListModel();
-    String Dato[] = new String[5];
+    
+    //Creamos un objeto tabla, un modelo de tabla para trabjar con el, para colocar las consultas en el datatable
+    DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+
+    
     //Creamos la conexion a la base de datos
     //Declaramos una coneccion en null al igual que un statement tambien en null
     Connection connection = null;
     Statement statement = null;
-    //Creamos un objeto tabla, un modelo de tabla para trabjar con el, para colocar las consultas en el datatable
-    DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-
+    
     private Connection connect() {
         //Inicializamos la conexion
         Connection conn = null;
@@ -67,8 +69,7 @@ public class EditarRegistros extends javax.swing.JFrame {
         buttonGroup2.add(radioEfectivo);
 
         Date fecha = new Date();
-        System.out.println(fecha);
-        System.out.println(f.format(fecha));
+
         try {
             //CONECTA A LA BD
             connection = this.connect();
