@@ -49,7 +49,10 @@ public class Caja extends javax.swing.JFrame {
 
     public Caja() {
         initComponents();
+        //Para que se coloque en el centro la ventana
         this.setLocationRelativeTo(null);
+        //Colocamos para desactivar el boton de maximizar en la ventana
+        this.setResizable(false);
         //Asigno radio butons al grupo
         buttonGroup1.add(radioEgreso);
         buttonGroup1.add(radioIngreso);
@@ -98,32 +101,30 @@ public class Caja extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         radioEgreso.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioEgreso.setForeground(new java.awt.Color(204, 0, 0));
         radioEgreso.setText("Egreso");
-        jPanel1.add(radioEgreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 40, 80, -1));
+        jPanel1.add(radioEgreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, 80, -1));
 
         radioIngreso.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioIngreso.setForeground(new java.awt.Color(204, 0, 0));
         radioIngreso.setText("Ingreso");
-        jPanel1.add(radioIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, -1, -1));
+        jPanel1.add(radioIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 80, -1, -1));
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Detalle");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 40, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 40, -1, -1));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Monto");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, -1, -1));
 
-        textMonto.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jPanel1.add(textMonto, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 140, 30));
+        textMonto.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jPanel1.add(textMonto, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 150, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -131,6 +132,7 @@ public class Caja extends javax.swing.JFrame {
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 120, -1, -1));
 
         textArea.setColumns(20);
+        textArea.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         textArea.setRows(5);
         jScrollPane1.setViewportView(textArea);
 
@@ -145,7 +147,7 @@ public class Caja extends javax.swing.JFrame {
                 guardarActionPerformed(evt);
             }
         });
-        jPanel1.add(guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, -1, -1));
+        jPanel1.add(guardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 310, 120, -1));
 
         salir.setBackground(new java.awt.Color(204, 0, 0));
         salir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -156,30 +158,25 @@ public class Caja extends javax.swing.JFrame {
                 salirActionPerformed(evt);
             }
         });
-        jPanel1.add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 310, 110, -1));
+        jPanel1.add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 310, 120, -1));
 
-        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("CAJA DIARIA");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, -1, -1));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, -1, -1));
 
-        comboDetalle.setBackground(new java.awt.Color(204, 0, 0));
-        comboDetalle.setForeground(new java.awt.Color(255, 255, 255));
         comboDetalle.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jPanel1.add(comboDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 70, 140, 30));
+        jPanel1.add(comboDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 150, 30));
 
         radioMp.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioMp.setForeground(new java.awt.Color(204, 0, 0));
         radioMp.setText("MP");
-        jPanel1.add(radioMp, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 40, -1, -1));
+        jPanel1.add(radioMp, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 80, -1));
 
         radioEfectivo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioEfectivo.setForeground(new java.awt.Color(204, 0, 0));
         radioEfectivo.setText("Efectivo");
-        jPanel1.add(radioEfectivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 70, -1, -1));
+        jPanel1.add(radioEfectivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, -1, -1));
 
-        jMenuBar1.setBackground(new java.awt.Color(204, 0, 0));
-        jMenuBar1.setForeground(new java.awt.Color(255, 255, 255));
+        jMenuBar1.setBackground(new java.awt.Color(255, 255, 255));
 
         jMenu1.setText("Archivo");
 

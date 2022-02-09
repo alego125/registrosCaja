@@ -49,7 +49,7 @@ public class BusquedaDetalle extends javax.swing.JFrame {
     public BusquedaDetalle() {
         initComponents();
         this.setLocationRelativeTo(null);
-
+        this.setResizable(false);
         //Aca lo que hacemos es inicializar el modelo de la tabla con los campos que tenemos en la base de datos
         modelo.addColumn("Fecha");
         modelo.addColumn("Ingreso");

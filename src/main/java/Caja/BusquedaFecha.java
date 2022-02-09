@@ -5,23 +5,29 @@
  */
 package Caja;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.PdfPTable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +53,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
     String pattern = "#.##";
     //Creamos el formateador para los numeros al cual le pasamos el patron de dos decimales uno por cada # que colocamos
     DecimalFormat decimalFormat = new DecimalFormat(pattern);
+    ArrayList detalles = new ArrayList();
 
     private Connection connect() {
         //Inicializamos la conexion
@@ -66,7 +73,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
     public BusquedaFecha() {
         initComponents();
         this.setLocationRelativeTo(null);
-
+        this.setResizable(false);
         // TODO add your handling code here:
         //Aca lo que hacemos es inicializar el modelo de la tabla con los campos que tenemos en la base de datos
         modelo.addColumn("Fecha");
@@ -74,7 +81,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
         modelo.addColumn("Egreso");
         modelo.addColumn("Observacion");
         modelo.addColumn("Detalle");
-        modelo.addColumn("MP");        
+        modelo.addColumn("MP");
     }
 
     /**
@@ -105,7 +112,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(155, 155, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -140,13 +147,11 @@ public class BusquedaFecha extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 524, 230));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel2.setText("TOTAL DE LA BUSQUEDA = ");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 230, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, 250, -1));
 
-        totalBusqueda.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        totalBusqueda.setForeground(new java.awt.Color(255, 255, 255));
+        totalBusqueda.setFont(new java.awt.Font("Times New Roman", 1, 20)); // NOI18N
         jPanel1.add(totalBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 340, 280, 40));
 
         jMenu1.setText("Archivo");
@@ -241,15 +246,15 @@ public class BusquedaFecha extends javax.swing.JFrame {
 
                     //Realizamos validacion para realizar la suma o resta y asi sacar el total de los valores de la caja teniendo en cuenta ingreso y egreso
                     if (rs.getString("ingreso") == null) {
-                        if (rs.getInt("mp") == 1){
+                        if (rs.getInt("mp") == 1) {
                             totalMp = totalMp - Double.parseDouble(rs.getString("egreso"));
-                        }else {
+                        } else {
                             totalEf = totalEf - Double.parseDouble(rs.getString("egreso"));
                         }
                     } else if (rs.getString("egreso") == null) {
-                        if (rs.getInt("mp") == 1){
+                        if (rs.getInt("mp") == 1) {
                             totalMp = totalMp + Double.parseDouble(rs.getString("ingreso"));
-                        }else {
+                        } else {
                             totalEf = totalEf + Double.parseDouble(rs.getString("ingreso"));
                         }
                     }
@@ -294,6 +299,40 @@ public class BusquedaFecha extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    //Metodo mediante el cual traemos todos los nombres de los detalles de la db
+    public ArrayList traerElementosDetalle() {
+        try {
+            //CONECTA A LA BD
+            connection = this.connect();
+            //Iniciamos el statement de la conexion
+            statement = connection.createStatement();
+
+            //Traemos todo de la base de datos de la tabla de datos
+            PreparedStatement pt = connection.prepareStatement("SELECT detalle FROM dtos");
+            ResultSet rs = pt.executeQuery();
+
+            while (rs.next()) {
+                detalles.add(rs.getString("detalle"));
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: \n" + e.getMessage() + "\n VUELVA A INTENTARLO");
+        } finally {
+            //Al finalizar cerramos la conexion
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // connection close failed. en el caso de que haya un error en la conexion
+                System.err.println(e);
+                JOptionPane.showMessageDialog(null, "Error: \n" + e.getMessage() + "\n VUELVA A INTENTARLO");
+            }
+        }
+        return detalles;
+    }
+
     //Imprimir registros
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
 
@@ -303,7 +342,19 @@ public class BusquedaFecha extends javax.swing.JFrame {
         float totalEgreso = 0;
         //Creamos la tabla para la informacion que lenaremos dentro del documento
         PdfPTable tabla = new PdfPTable(6);
-
+        
+        //Creamos fuentes
+        //Fuente 1 (times new roman tamaño 14 y bold color rojo)
+        Font fuenteRed = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD, BaseColor.RED);
+        //Fuente subrrayada 
+        Font fuenteUnderline = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD, BaseColor.BLACK);
+        fuenteUnderline.setStyle(Font.UNDERLINE);
+        //Fuente especial para el cuadro de observaciones
+        Font fuenteObservaciones = new Font(Font.FontFamily.COURIER, 10, Font.BOLD, BaseColor.BLACK);
+        
+        
+        
+        
         try {
 
             //Acedemos a la ruta del pdf que vamos a guardar para esto hacemos uso de el metodo get property de la clase system con la cual mediante user.home accedemos a la raiz es decir si ponemos cmd vemos que la ruta es c:/user/ale y alli esta todo ahi podemos hacceder a cualquier parate de la pc ya que es el directorio raiz de nuestra computadora
@@ -313,30 +364,70 @@ public class BusquedaFecha extends javax.swing.JFrame {
             PdfWriter.getInstance(documento, new FileOutputStream(ruta + "/Desktop/CajaDia.pdf"));
             //Ahora abrimos el documento para poder empezar a escribir dentro del mismo 
             documento.open();
-
+            
+            tabla.setWidthPercentage(100);
+            
             //Seguido empezamos a crear la tabla            
-            tabla.addCell("Fecha");
-            tabla.addCell("Detalle");
-            tabla.addCell("Ingresos");
-            tabla.addCell("Egresos");
-            tabla.addCell("Observacion");
-            tabla.addCell("MP");
+            tabla.addCell(new Phrase("Detalle", fuenteRed));
+            tabla.addCell(new Phrase("Ingresos", fuenteRed));
+            tabla.addCell(new Phrase("Egresos", fuenteRed));
+            tabla.addCell(new Phrase("Nº Total Registros", fuenteRed));
+            tabla.addCell(new Phrase("Mercado Pago", fuenteRed));
+            tabla.addCell(new Phrase("Observacion", fuenteRed));
 
+            
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error " + e);
         }
 
-        //Recorremos el jtable para cada elemento del mismo lo vallamos agregando a la tabla que se ensertara dentro del pdf
-        for (int i = 0; i < jTable1.getRowCount(); i++) {
-            tabla.addCell((String) jTable1.getValueAt(i, 0));
-            tabla.addCell((String) jTable1.getValueAt(i, 4));
-            tabla.addCell((String) decimalFormat.format(Float.parseFloat((String) jTable1.getValueAt(i, 1))));
-            tabla.addCell((String) decimalFormat.format(Float.parseFloat((String) jTable1.getValueAt(i, 2))));
-            tabla.addCell((String) jTable1.getValueAt(i, 3));
-            tabla.addCell((String) jTable1.getValueAt(i, 5));
+        //Llenamos la lista de detalles con los elementos ejecutando el metodo traerElementosDetalle que definimos mas arriba
+        this.traerElementosDetalle();
+        
+        //Recorremos caa elemento de la lista de detalles
+        for (int j = 0; j < detalles.size(); j++) {
+            Double ing = 0.0, egr = 0.0;
+            int cant = 0, cantMP = 0;
+            String observ = "";
+            //Dentro de cada elemento de la lista de detalle recorremos la tabla de registros y buscamos la coincidencia con el elemento del arraylist de detalles cuando esto ocurra entonces realizamos la extraccion de datos
+            for (int i = 0; i < jTable1.getRowCount(); i++) {
+                if (jTable1.getValueAt(i, 4).equals(detalles.get(j))) {
+                    //Realizamos la suma de los ingresos y egresos de la coincidencia con la lista de detalles 
+                    ing = ing + Float.parseFloat((String) jTable1.getValueAt(i, 1));
+                    egr = egr + Float.parseFloat((String) jTable1.getValueAt(i, 2));
+                    //Si lo que viene en el campo de observaciones no es igual a null entonces se concatena si no no se agrega nada, esto lo hacemos para evitar que se generen saltos de linea en blanco quedando un espacio inecesario en la parte de observaciones
+                    if (!jTable1.getValueAt(i, 3).equals("")) {
+                        //Concatenamos las observaciones de cada entrada en una sola variable
+                        observ = observ + "*" + jTable1.getValueAt(i, 3) + "\n";
+                    }
+                    //Contamos las cantidades de ingresos
+                    cant++;
+                    //Contamos de esas cantidades de ingresos cuantos fueron de mercado pago
+                    if (jTable1.getValueAt(i, 5).equals("1")) {
+                        cantMP++;
+                    }
+                }
+            }
+            
+            //Detalle
+            tabla.addCell((String) detalles.get(j));
+            //Ingresos
+            tabla.addCell((String) decimalFormat.format(ing));            
+            //Egresos
+            tabla.addCell((String) decimalFormat.format(egr));
+            //Cantidad de entradas Totales
+            tabla.addCell(String.valueOf(cant));
+            //Cantidad de entradas Mercado Pago
+            tabla.addCell(String.valueOf(cantMP));
+            //Observaciones (le colocamos el tipo de fuente que creamos especifico para las observaciones)
+            tabla.addCell(new Phrase(observ, fuenteObservaciones));
+        }
+        
+        //Creamos un nuevo bucle for para recorrer nuevamente los valores y no generar conflictos con lo anterior y asi sacar los totales para mostrar
+        for(int i = 0; i < jTable1.getRowCount(); i++){
             //Por cada vuelta vamos sumando cada uno de los valores tanto de ingreso como egreso para sacar los totales
             totalIngreso = totalIngreso + Float.parseFloat(jTable1.getValueAt(i, 1).toString());
-            totalEgreso = totalEgreso + Float.parseFloat(jTable1.getValueAt(i, 2).toString());
+            totalEgreso = totalEgreso + Float.parseFloat(jTable1.getValueAt(i, 2).toString());            
         }
 
         //Creamos un parrafo
@@ -352,28 +443,19 @@ public class BusquedaFecha extends javax.swing.JFrame {
 
         Paragraph paragraph_3 = new Paragraph();
         paragraph_3.add("TOTAL GENERAL Mercado Pago = $" + decimalFormat.format(totalMp));
-        paragraph_3.setAlignment(Paragraph.ALIGN_LEFT);
-        
-        Paragraph paragraph_4 = new Paragraph();
         paragraph_3.add("\nTOTAL GENERAL Efectivo = $" + decimalFormat.format(totalEf));
-        paragraph_3.setAlignment(Paragraph.ALIGN_LEFT);
-        
-        Paragraph paragraph_5 = new Paragraph();
         paragraph_3.add("\nTOTAL GENERAL = $" + decimalFormat.format(totalEf + totalMp));
-        paragraph_3.setAlignment(Paragraph.ALIGN_LEFT);
-
+        
         try {
             //Luego dentro de un ty catch, agregamos en el orden que queremos que se vea dentro del docuemnto cada uno de los elementos
             //Para el caso de querer agregar fraces directamente usamos una instancia de la clase Phrase pasandole el string que queremos postrar en uno le pasamos la fecha y en otros un salto de linea para separar la informacion dentro del documento
-            documento.add(new Phrase("Caja dia: " + jTable1.getValueAt(1, 0)));
+            documento.add(new Phrase("Caja dia: " + jTable1.getValueAt(1, 0), fuenteUnderline));
             documento.add(new Phrase(" \n "));
             documento.add(tabla);
             documento.add(new Phrase(" \n "));
             documento.add(paragraph_1);
             documento.add(paragraph_2);
             documento.add(paragraph_3);
-            documento.add(paragraph_4);
-            documento.add(paragraph_5);
             JOptionPane.showMessageDialog(null, "PDF generado en escritorio");
         } catch (DocumentException ex) {
             Logger.getLogger(BusquedaFecha.class.getName()).log(Level.SEVERE, null, ex);

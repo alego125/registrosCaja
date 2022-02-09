@@ -59,7 +59,8 @@ public class EditarRegistros extends javax.swing.JFrame {
     public EditarRegistros() {
         initComponents();
         this.setLocationRelativeTo(null);
-
+        this.setResizable(false);
+        
         buttonGroup1.add(radioEgreso);
         buttonGroup1.add(radioIngreso);
         buttonGroup2.add(radioMp);
@@ -166,13 +167,13 @@ public class EditarRegistros extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(102, 102, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("EDITAR REGISTROS");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 0, -1, -1));
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 0, -1, -1));
 
         listItems.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -194,23 +195,23 @@ public class EditarRegistros extends javax.swing.JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, 100, -1));
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Monto");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, -1, -1));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(163, 190, 60, -1));
 
         txtMonto.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jPanel1.add(txtMonto, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, 200, -1));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Detalle");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 240, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 240, 60, -1));
 
         txtDetalle.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jPanel1.add(txtDetalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 260, 200, -1));
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Observacion");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 290, -1, -1));
@@ -219,14 +220,12 @@ public class EditarRegistros extends javax.swing.JFrame {
         jPanel1.add(txtObservacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 310, 200, -1));
 
         radioIngreso.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioIngreso.setForeground(new java.awt.Color(204, 0, 0));
         radioIngreso.setText("Ingreso");
         jPanel1.add(radioIngreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 340, -1, -1));
 
         radioEgreso.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioEgreso.setForeground(new java.awt.Color(204, 0, 0));
         radioEgreso.setText("Egreso");
-        jPanel1.add(radioEgreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, -1, -1));
+        jPanel1.add(radioEgreso, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, 80, -1));
 
         btnGuardar.setBackground(new java.awt.Color(204, 0, 0));
         btnGuardar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -237,15 +236,13 @@ public class EditarRegistros extends javax.swing.JFrame {
                 btnGuardarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 420, -1, -1));
+        jPanel1.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 420, 200, -1));
 
         radioMp.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioMp.setForeground(new java.awt.Color(204, 0, 0));
         radioMp.setText("MP");
-        jPanel1.add(radioMp, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 380, -1, -1));
+        jPanel1.add(radioMp, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 380, 80, -1));
 
         radioEfectivo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        radioEfectivo.setForeground(new java.awt.Color(204, 0, 0));
         radioEfectivo.setText("Efectivo");
         jPanel1.add(radioEfectivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 380, -1, -1));
 
