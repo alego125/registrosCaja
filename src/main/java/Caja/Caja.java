@@ -5,6 +5,7 @@
  */
 package Caja;
 
+import db.Conexion;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -33,19 +34,8 @@ public class Caja extends javax.swing.JFrame {
     //Creamos un objeto tabla, un modelo de tabla para trabjar con el, para colocar las consultas en el datatable
     DefaultTableModel modelo = new DefaultTableModel();
 
-    private Connection connect() {
-        //Inicializamos la conexion
-        Connection conn = null;
-        try {
-            //Pasamos el nombre de la base de datos a la cual nos vamos a conectar
-            conn = DriverManager.getConnection("jdbc:sqlite:dbCaja.db");
-        } catch (SQLException e) {
-            //Mandamos un mensaje de error a la consola en caso de que aparezca uno
-            System.out.println(e.getMessage());
-        }
-        //Por ultimo retornamos la conexion
-        return conn;
-    }
+    //Instaciamos la clase de conexion
+    Conexion conec = new Conexion();
 
     public Caja() {
         initComponents();
@@ -280,7 +270,7 @@ public class Caja extends javax.swing.JFrame {
 
         try {
             //CONECTA A LA BD
-            connection = this.connect();
+            connection = conec.connect();
             //Iniciamos el statement de la conexion
             statement = connection.createStatement();
             if (radioEgreso.isSelected()) {
@@ -353,7 +343,7 @@ public class Caja extends javax.swing.JFrame {
     public void traerElementosDtos() {
         try {
             //CONECTA A LA BD
-            connection = this.connect();
+            connection = conec.connect();
             //Iniciamos el statement de la conexion
             statement = connection.createStatement();
 
@@ -438,7 +428,7 @@ public class Caja extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Elemento agregado correctamente");
         }
         try {
-            connection = this.connect();
+            connection = conec.connect();
             statement = connection.createStatement();
             //Creamos el query para agregar el nuevo elemento de detalle 
             PreparedStatement pt = connection.prepareStatement("INSERT INTO dtos (detalle) VALUES(?)");

@@ -16,6 +16,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.PdfPTable;
+import db.Conexion;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -55,21 +56,9 @@ public class BusquedaFecha extends javax.swing.JFrame {
     DecimalFormat decimalFormat = new DecimalFormat(pattern);
     ArrayList detalles = new ArrayList();
 
-    private Connection connect() {
-        //Inicializamos la conexion
-        Connection conn = null;
-        try {
-            //Pasamos el nombre de la base de datos a la cual nos vamos a conectar
-            conn = DriverManager.getConnection("jdbc:sqlite:dbCaja.db");
-        } catch (SQLException e) {
-            //Mandamos un mensaje de error a la consola en caso de que aparezca uno
-            System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, "Error: \n" + e.getMessage() + "\n VUELVA A INTENTARLO");
-        }
-        //Por ultimo retornamos la conexion
-        return conn;
-    }
-
+   //Instanciamos la conexion nueva
+    Conexion conec = new Conexion();
+    
     public BusquedaFecha() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -215,7 +204,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
 
         try {
             //CONECTA A LA BD
-            connection = this.connect();
+            connection = conec.connect();
             //Iniciamos el statement de la conexion
             statement = connection.createStatement();
             //Le decimos al statement mediante el metodo setQueryTimeout que si se tarda mas de 20 segundo sin usar entonces se cierra la conexion 
@@ -243,7 +232,8 @@ public class BusquedaFecha extends javax.swing.JFrame {
                     Dato[5] = String.valueOf(rs.getInt("mp"));
                     //Agregamos la informacion al modelo de la tabla para mostrarlo en pantalla
                     modelo.addRow(Dato);
-
+                    
+                    
                     //Realizamos validacion para realizar la suma o resta y asi sacar el total de los valores de la caja teniendo en cuenta ingreso y egreso
                     if (rs.getString("ingreso") == null) {
                         if (rs.getInt("mp") == 1) {
@@ -303,7 +293,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
     public ArrayList traerElementosDetalle() {
         try {
             //CONECTA A LA BD
-            connection = this.connect();
+            connection = conec.connect();
             //Iniciamos el statement de la conexion
             statement = connection.createStatement();
 
@@ -341,7 +331,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
         float totalIngreso = 0;
         float totalEgreso = 0;
         //Creamos la tabla para la informacion que lenaremos dentro del documento
-        PdfPTable tabla = new PdfPTable(6);
+        PdfPTable tabla = new PdfPTable(8);
         
         //Creamos fuentes
         //Fuente 1 (times new roman tamaño 14 y bold color rojo)
@@ -371,9 +361,11 @@ public class BusquedaFecha extends javax.swing.JFrame {
             tabla.addCell(new Phrase("Detalle", fuenteRed));
             tabla.addCell(new Phrase("Ingresos", fuenteRed));
             tabla.addCell(new Phrase("Egresos", fuenteRed));
-            tabla.addCell(new Phrase("Nº Total Registros", fuenteRed));
-            tabla.addCell(new Phrase("Mercado Pago", fuenteRed));
+            tabla.addCell(new Phrase("Efectivo", fuenteRed));
+            tabla.addCell(new Phrase("Merc Pago", fuenteRed));            
             tabla.addCell(new Phrase("Observacion", fuenteRed));
+            tabla.addCell(new Phrase("Total Cuotas", fuenteRed));
+            tabla.addCell(new Phrase("Cuotas Mercado Pago", fuenteRed));            
 
             
             
@@ -386,7 +378,7 @@ public class BusquedaFecha extends javax.swing.JFrame {
         
         //Recorremos caa elemento de la lista de detalles
         for (int j = 0; j < detalles.size(); j++) {
-            Double ing = 0.0, egr = 0.0;
+            Double ing = 0.0, egr = 0.0, mp = 0.0, ef = 0.0;
             int cant = 0, cantMP = 0;
             String observ = "";
             //Dentro de cada elemento de la lista de detalle recorremos la tabla de registros y buscamos la coincidencia con el elemento del arraylist de detalles cuando esto ocurra entonces realizamos la extraccion de datos
@@ -399,6 +391,25 @@ public class BusquedaFecha extends javax.swing.JFrame {
                     if (!jTable1.getValueAt(i, 3).equals("")) {
                         //Concatenamos las observaciones de cada entrada en una sola variable
                         observ = observ + "*" + jTable1.getValueAt(i, 3) + "\n";
+                    }
+                    //Analizamos si es o no el registro de mercado pago si es entra en el if
+                    if(jTable1.getValueAt(i, 5).equals("1")){
+                        //Corroboro que el valor de ingreso sea diferente de cero si es asi entro al if
+                        if(!jTable1.getValueAt(i, 1).equals("0")){
+                            //Cargo el monto de mercado pago a la variable mp
+                            mp = mp + Float.parseFloat((String) jTable1.getValueAt(i, 1));
+                        }else{
+                            //En caso contrario entonces es un egreso por lo que uso el casillero de egreso para cargar el valor a mp
+                            mp = mp + Float.parseFloat((String) jTable1.getValueAt(i, 2));
+                        }
+                    }else{
+                        //Caso contrario es efectivo 
+                        //Realizo la misma logica que para la carga de mercado pago en el efectivo pero se carga a una variable local llamada ef
+                        if(!jTable1.getValueAt(i, 1).equals("0")){
+                            ef = ef + Float.parseFloat((String) jTable1.getValueAt(i, 1));
+                        }else{
+                            ef = ef + Float.parseFloat((String) jTable1.getValueAt(i, 2));
+                        }
                     }
                     //Contamos las cantidades de ingresos
                     cant++;
@@ -415,12 +426,16 @@ public class BusquedaFecha extends javax.swing.JFrame {
             tabla.addCell((String) decimalFormat.format(ing));            
             //Egresos
             tabla.addCell((String) decimalFormat.format(egr));
+            //Monto total efectivo
+            tabla.addCell(String.valueOf(ef));
+            //Monto toal mercado pago
+            tabla.addCell(String.valueOf(mp));                      
+            //Observaciones (le colocamos el tipo de fuente que creamos especifico para las observaciones)
+            tabla.addCell(new Phrase(observ, fuenteObservaciones));
             //Cantidad de entradas Totales
             tabla.addCell(String.valueOf(cant));
             //Cantidad de entradas Mercado Pago
-            tabla.addCell(String.valueOf(cantMP));
-            //Observaciones (le colocamos el tipo de fuente que creamos especifico para las observaciones)
-            tabla.addCell(new Phrase(observ, fuenteObservaciones));
+            tabla.addCell(String.valueOf(cantMP));  
         }
         
         //Creamos un nuevo bucle for para recorrer nuevamente los valores y no generar conflictos con lo anterior y asi sacar los totales para mostrar
