@@ -6,6 +6,7 @@
 package Caja;
 
 import clases.Registros;
+import db.Conexion;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -43,20 +44,8 @@ public class EditarRegistros extends javax.swing.JFrame {
     Connection connection = null;
     Statement statement = null;
     
-    private Connection connect() {
-        //Inicializamos la conexion
-        Connection conn = null;
-        try {
-            //Pasamos el nombre de la base de datos a la cual nos vamos a conectar
-            conn = DriverManager.getConnection("jdbc:sqlite:dbCaja.db");
-        } catch (SQLException e) {
-            //Mandamos un mensaje de error a la consola en caso de que aparezca uno
-            System.out.println(e.getMessage());
-            JOptionPane.showMessageDialog(null, "Error: \n" + e.getMessage() + "\n VUELVA A INTENTARLO");
-        }
-        //Por ultimo retornamos la conexion
-        return conn;
-    }
+    //Instanciamos la conexion nueva
+    Conexion conec = new Conexion();
 
     public EditarRegistros() {
         initComponents();
@@ -72,7 +61,7 @@ public class EditarRegistros extends javax.swing.JFrame {
 
         try {
             //CONECTA A LA BD
-            connection = this.connect();
+            connection = conec.connect();
             //Iniciamos el statement de la conexion
             statement = connection.createStatement();
             //Le decimos al statement mediante el metodo setQueryTimeout que si se tarda mas de 20 segundo sin usar entonces se cierra la conexion 
@@ -305,7 +294,7 @@ public class EditarRegistros extends javax.swing.JFrame {
             int idBuscar = registros.get(elementoSeleccionado).getId();
             try {
                 //CONECTA A LA BD
-                connection = this.connect();
+                connection = conec.connect();
                 //Iniciamos el statement de la conexion
                 statement = connection.createStatement();
                 //Le decimos al statement mediante el metodo setQueryTimeout que si se tarda mas de 20 segundo sin usar entonces se cierra la conexion 
@@ -386,7 +375,7 @@ public class EditarRegistros extends javax.swing.JFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
         try {
-            connection = this.connect();
+            connection = conec.connect();
             statement = connection.createStatement();
             statement.setQueryTimeout(20);
             PreparedStatement pt = null;
